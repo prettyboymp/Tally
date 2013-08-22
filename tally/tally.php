@@ -6,14 +6,12 @@
 	Description: A WordPress registration plugin
 	Author: Chris Roche
 	Author URI: http://www.clarknikdelpowell.com
-	Text Domain: tally
-	Domain Path: /lang	
 
-	Copyright 2012  Chris Roche (email : wordpress@clarknikdelpowell.com)
+	Copyright 2013  Chris Roche (email : wordpress@clarknikdelpowell.com)
 
 	This program is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License, version 2, as 
-	published by the Free Software Foundation.
+	it under the terms of the GNU General Public License, version 3 or later, 
+	as published by the Free Software Foundation.
 
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -30,11 +28,12 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 //FILESYSTEM CONSTANTS
-define('TALLY_PATH', plugin_dir_path(__FILE__));
-define('TALLY_URL', plugin_dir_url(__FILE__));
+define('TALLY_LOCAL',        $_SERVER['SERVER_NAME'] == 'localhost');
+define('TALLY_PATH',         plugin_dir_path(__FILE__));
+define('TALLY_URL',          TALLY_LOCAL ? plugins_url().'/tally/' : plugin_dir_url(__FILE__));
 
 //DATABASE CONSTANTS
-define('TALLY_DB_VERSION', 1);
+define('TALLY_DB_VERSION', 2);
 define('TALLY_DB_VERSION_OPTION', 'tally_db_version');
 define('TALLY_EVENTS_TABLE', 'tally_events');
 define('TALLY_REGISTRATION_TYPES_TABLE', 'tally_registration_types');
@@ -82,7 +81,7 @@ final class TALLY_Tally {
 		//check to ensure database is current
 		//have to wait until init before attempting to manipulate the db
 		//results in errors otherwise on the admin side...
-		add_action('init', array(__CLASS__, 'migrate'));		
+		add_action('init', array(__CLASS__, 'migrate'));
 
 	}
 
