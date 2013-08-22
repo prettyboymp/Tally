@@ -33,7 +33,7 @@ define('TALLY_PATH',         plugin_dir_path(__FILE__));
 define('TALLY_URL',          TALLY_LOCAL ? plugins_url().'/tally/' : plugin_dir_url(__FILE__));
 
 //DATABASE CONSTANTS
-define('TALLY_DB_VERSION', 2);
+define('TALLY_DB_VERSION', 3);
 define('TALLY_DB_VERSION_OPTION', 'tally_db_version');
 define('TALLY_EVENTS_TABLE', 'tally_events');
 define('TALLY_REGISTRATION_TYPES_TABLE', 'tally_registration_types');

@@ -35,6 +35,12 @@ final class TALLY_Migrations {
 			$status = 2;
 		}
 
+		// 3
+		if ($status < 3 && $current >= 3) {
+			self::up_3();
+			$status = 3;
+		}
+
 		return update_option(TALLY_DB_VERSION_OPTION, $status);
 	}
 
@@ -51,6 +57,13 @@ final class TALLY_Migrations {
 		$status = (int)get_option(TALLY_DB_VERSION_OPTION, 0);
 		if ($status <= 0) return true;
 
+		// 3
+		if ($status >= 3) {
+			self::down_3();
+			$status = 2;
+		}
+
+		// 2
 		if ($status >= 2) {
 			self::down_2();
 			$status = 1;
@@ -151,6 +164,65 @@ final class TALLY_Migrations {
 	private static function down_2() {
 		global $wpdb;
 		$table = self::get_table(TALLY_REGISTRATION_TYPES_TABLE);
+
+		$sql = "DROP TABLE $table";
+
+		$wpdb->query($sql);
+	}
+
+	/*****************************************************************************
+	 * 3 : CREATION OF REGISTRATIONS TABLE
+	 ****************************************************************************/
+
+	private static function up_3() {
+		global $wpdb;
+		$table = self::get_table(TALLY_REGISTRATIONS_TABLE);
+
+		$sql = "CREATE TABLE $table (
+			`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+			`guid` char(36) NOT NULL DEFAULT '',
+			`post_id` bigint(20) NOT NULL,
+			`ip_address` varchar(46) NOT NULL DEFAULT '',
+			`created_on` datetime NOT NULL,
+			`modified_on` datetime NOT NULL,
+			`contact_salutation` varchar(5) DEFAULT NULL,
+			`contact_first_name` varchar(64) NOT NULL DEFAULT '',
+			`contact_last_name` varchar(64) NOT NULL DEFAULT '',
+			`contact_email` varchar(256) NOT NULL DEFAULT '',
+			`contact_phone` char(10) NOT NULL DEFAULT '',
+			`organization` varchar(256) NOT NULL DEFAULT '',
+			`shipping_address_1` varchar(256) DEFAULT NULL,
+			`shipping_address_2` varchar(256) DEFAULT NULL,
+			`shipping_city` varchar(256) DEFAULT NULL,
+			`shipping_state` char(2) DEFAULT NULL,
+			`shipping_zip` char(5) DEFAULT NULL,
+			`custom_fields` text,
+			`registration_type_id` bigint(20) NOT NULL,
+			`registration_qty` int(10) unsigned NOT NULL,
+			`total_payment` decimal(9,2) NOT NULL DEFAULT '0.00',
+			`billing_first_name` varchar(64) DEFAULT NULL,
+			`billing_last_name` varchar(64) DEFAULT NULL,
+			`billing_address_1` varchar(256) DEFAULT NULL,
+			`billing_address_2` varchar(256) DEFAULT NULL,
+			`billing_city` varchar(256) DEFAULT NULL,
+			`billing_state` varchar(256) DEFAULT NULL,
+			`billing_zip` varchar(256) DEFAULT NULL,
+			`transaction_raw` text,
+			`transaction_data` text,
+			`transaction_status` tinyint(3) unsigned NOT NULL DEFAULT '0',
+			`registration_notes` text,
+			`status` tinyint(3) unsigned NOT NULL DEFAULT '0',
+			PRIMARY KEY (`id`),
+			UNIQUE KEY `guid` (`guid`),
+			KEY `post_id` (`post_id`)
+		);";
+
+		$wpdb->query($sql);
+	}
+
+	private static function down_3() {
+		global $wpdb;
+		$table = self::get_table(TALLY_REGISTRATIONS_TABLE);
 
 		$sql = "DROP TABLE $table";
 
