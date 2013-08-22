@@ -31,6 +31,7 @@
 define('TALLY_LOCAL',        $_SERVER['SERVER_NAME'] == 'localhost');
 define('TALLY_PATH',         plugin_dir_path(__FILE__));
 define('TALLY_URL',          TALLY_LOCAL ? plugins_url().'/tally/' : plugin_dir_url(__FILE__));
+define('TALLY_MODELS', TALLY_PATH.'models/');
 
 //DATABASE CONSTANTS
 define('TALLY_DB_VERSION', 4);
@@ -44,12 +45,13 @@ define('TALLY_REGISTRANTS_TABLE', 'tally_registrants');
 // PLUGIN DEPENDENCIES
 ////////////////////////////////////////////////////////////////////////////////
 
-require_once TALLY_PATH.'tally-base.php';
-require_once TALLY_PATH.'tally-migrations.php';
-require_once TALLY_PATH.'tally-event.php';
-require_once TALLY_PATH.'tally-registration-type.php';
-require_once TALLY_PATH.'tally-registration.php';
-require_once TALLY_PATH.'tally-registrant.php';
+// Models
+require_once TALLY_MODELS.'base.php';
+require_once TALLY_MODELS.'migrations.php';
+require_once TALLY_MODELS.'event.php';
+require_once TALLY_MODELS.'registration-type.php';
+require_once TALLY_MODELS.'registration.php';
+require_once TALLY_MODELS.'registrant.php';
 
 ////////////////////////////////////////////////////////////////////////////////
 // ROOT PLUGIN CLASS
