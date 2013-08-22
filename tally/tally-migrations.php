@@ -41,6 +41,12 @@ final class TALLY_Migrations {
 			$status = 3;
 		}
 
+		// 4
+		if ($status < 4 && $current >= 4) {
+			self::up_4();
+			$status = 4;
+		}
+
 		return update_option(TALLY_DB_VERSION_OPTION, $status);
 	}
 
@@ -56,6 +62,12 @@ final class TALLY_Migrations {
 		$current = TALLY_DB_VERSION;
 		$status = (int)get_option(TALLY_DB_VERSION_OPTION, 0);
 		if ($status <= 0) return true;
+
+		// 4
+		if ($status >= 4) {
+			self::down_4();
+			$status = 3;
+		}
 
 		// 3
 		if ($status >= 3) {
@@ -223,6 +235,40 @@ final class TALLY_Migrations {
 	private static function down_3() {
 		global $wpdb;
 		$table = self::get_table(TALLY_REGISTRATIONS_TABLE);
+
+		$sql = "DROP TABLE $table";
+
+		$wpdb->query($sql);
+	}
+
+	/*****************************************************************************
+	 * 4 : CREATION OF REGISTRANTS TABLE
+	 ****************************************************************************/
+
+	private static function up_4() {
+		global $wpdb;
+		$table = self::get_table(TALLY_REGISTRANTS_TABLE);
+
+		$sql = "CREATE TABLE $table (
+			`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+			`registration_id` bigint(20) unsigned NOT NULL,
+			`post_id` bigint(20) unsigned NOT NULL,
+			`salutation` varchar(5) DEFAULT NULL,
+			`first_name` varchar(64) DEFAULT NULL,
+			`last_name` varchar(64) DEFAULT NULL,
+			`custom_fields` text,
+			`status` tinyint(3) unsigned NOT NULL DEFAULT '0',
+			PRIMARY KEY (`id`),
+			KEY `registration_id` (`registration_id`),
+			KEY `post_id` (`post_id`)
+		);";
+
+		$wpdb->query($sql);
+	}
+
+	private static function down_4() {
+		global $wpdb;
+		$table = self::get_table(TALLY_REGISTRANTS_TABLE);
 
 		$sql = "DROP TABLE $table";
 
