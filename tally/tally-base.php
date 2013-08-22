@@ -40,6 +40,9 @@ class Tally_Base {
 				case 'int':
 					$new = (int)$arg;
 					break;
+				case 'float':
+					$new = (float)$arg;
+					break;
 				case 'bool':
 					$new = (bool)$arg;
 					break;
@@ -49,8 +52,7 @@ class Tally_Base {
 				case 'datetime':
 					$new = ($arg instanceof DateTime || null === $arg) ? $arg : new DateTime($arg);
 					break;
-				case 'string':
-					//fall through
+				case 'string': // fall through
 				default:
 					$new = is_null($arg) ? null : (string)$arg;
 			}
