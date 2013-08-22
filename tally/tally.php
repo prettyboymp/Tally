@@ -28,18 +28,18 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 //FILESYSTEM CONSTANTS
-define('TALLY_LOCAL',        $_SERVER['SERVER_NAME'] == 'localhost');
-define('TALLY_PATH',         plugin_dir_path(__FILE__));
-define('TALLY_URL',          TALLY_LOCAL ? plugins_url().'/tally/' : plugin_dir_url(__FILE__));
+define('TALLY_LOCAL',  $_SERVER['SERVER_NAME'] == 'localhost');
+define('TALLY_PATH',   plugin_dir_path(__FILE__));
 define('TALLY_MODELS', TALLY_PATH.'models/');
+define('TALLY_URL',    TALLY_LOCAL ? plugins_url().'/tally/' : plugin_dir_url(__FILE__));
 
 //DATABASE CONSTANTS
-define('TALLY_DB_VERSION', 4);
-define('TALLY_DB_VERSION_OPTION', 'tally_db_version');
-define('TALLY_EVENTS_TABLE', 'tally_events');
+define('TALLY_DB_VERSION',               4);
+define('TALLY_DB_VERSION_OPTION',        'tally_db_version');
+define('TALLY_EVENTS_TABLE',             'tally_events');
 define('TALLY_REGISTRATION_TYPES_TABLE', 'tally_registration_types');
-define('TALLY_REGISTRATIONS_TABLE', 'tally_registrations');
-define('TALLY_REGISTRANTS_TABLE', 'tally_registrants');
+define('TALLY_REGISTRATIONS_TABLE',      'tally_registrations');
+define('TALLY_REGISTRANTS_TABLE',        'tally_registrants');
 
 ////////////////////////////////////////////////////////////////////////////////
 // PLUGIN DEPENDENCIES
