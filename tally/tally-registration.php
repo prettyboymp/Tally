@@ -114,9 +114,9 @@ class TALLY_Registration extends Tally_Base {
 		'status'               => '%d'
 	);
 
-	public static function with_post_id($post_id) {
-		$results = static::search(array('post_id' => $post_id));
-		return count($results) ? $results[0] : false;
+	public static function with_post_id($post_id) 
+	{
+		return static::search(array('post_id' => $post_id));
 	}
 
 }

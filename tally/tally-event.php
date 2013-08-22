@@ -54,7 +54,8 @@ class TALLY_Event extends Tally_Base {
 		'payment_method'           => '%d'
 	);
 
-	public static function with_post_id($post_id) {
+	public static function with_post_id($post_id) 
+	{
 		$results = static::search(array('post_id' => $post_id));
 		return count($results) ? $results[0] : false;
 	}
