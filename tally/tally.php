@@ -45,6 +45,7 @@ define('TALLY_REGISTRANTS_TABLE', 'tally_registrants');
 ////////////////////////////////////////////////////////////////////////////////
 
 require_once TALLY_PATH.'tally-migrations.php';
+require_once TALLY_PATH.'tally-event.php';
 
 ////////////////////////////////////////////////////////////////////////////////
 // ROOT PLUGIN CLASS
@@ -76,6 +77,15 @@ final class TALLY_Tally {
 	 */
 	public static function migrate() { TALLY_Migrations::up(); }
 
+	public static function debug() {
+		$evt = TALLY_Event::with_post_id(1);
+		if (!$evt) $evt = TALLY_Event::create(1);
+		$evt->open = true;
+		$evt->start_date = new DateTime('yesterday');
+		$evt->end_date = new DateTime('tomorrow');
+		$evt->save();
+	}
+
 	public static function initialize() {
 		
 		//check to ensure database is current
@@ -83,6 +93,7 @@ final class TALLY_Tally {
 		//results in errors otherwise on the admin side...
 		add_action('init', array(__CLASS__, 'migrate'));
 
+		if (TALLY_LOCAL) add_action('init', array(__CLASS__, 'debug'));
 	}
 
 }
