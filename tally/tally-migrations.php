@@ -140,6 +140,7 @@ final class TALLY_Migrations {
 			`end_date` DATETIME NULL DEFAULT NULL,
 			`active` tinyint(1) NOT NULL DEFAULT '1',
 			`open` tinyint(1) DEFAULT '1',
+			`order` tinyint(4) unsigned DEFAULT '0',
 			PRIMARY KEY (`id`),
 			KEY `post_id` (`post_id`)
 		);";
