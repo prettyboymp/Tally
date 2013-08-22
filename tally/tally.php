@@ -44,6 +44,7 @@ define('TALLY_REGISTRANTS_TABLE', 'tally_registrants');
 // PLUGIN DEPENDENCIES
 ////////////////////////////////////////////////////////////////////////////////
 
+require_once TALLY_PATH.'tally-base.php';
 require_once TALLY_PATH.'tally-migrations.php';
 require_once TALLY_PATH.'tally-event.php';
 
@@ -65,6 +66,16 @@ final class TALLY_Tally {
 	public static function uninstall() {
 		TALLY_Migrations::down();
 		delete_option(TALLY_DB_VERSION_OPTION);
+	}
+
+	private static $post_types = array(
+		'page',
+		'post',
+		'tz-event'
+	);
+
+	public static function post_types() {
+		return apply_filters('tally_post_types', self::$post_types);
 	}
 
 	/**
