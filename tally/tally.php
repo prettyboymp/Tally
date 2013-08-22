@@ -49,6 +49,7 @@ require_once TALLY_PATH.'tally-migrations.php';
 require_once TALLY_PATH.'tally-event.php';
 require_once TALLY_PATH.'tally-registration-type.php';
 require_once TALLY_PATH.'tally-registration.php';
+require_once TALLY_PATH.'tally-registrant.php';
 
 ////////////////////////////////////////////////////////////////////////////////
 // ROOT PLUGIN CLASS
