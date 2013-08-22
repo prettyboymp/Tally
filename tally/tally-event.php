@@ -13,19 +13,19 @@ class TALLY_Event extends Tally_Base {
 	protected static $key = 'post_id';
 
 	protected static $defaults = array(
-		'post_id'                  => 0,     //the id of the post that is the event
-		'enabled'                  => true,  //whether or not registration is enabled on this event
-		'open'                     => true,  //whether or not registration is open on this event
-		'start_date'               => null,  //the start date for registration, null = immediately available
-		'end_date'                 => null,  //the end date for registration, null = registration does not end
-		'capture_salutation'       => false, //whether or not to capture the contact's salutation (Mr, Mrs, Ms)
-		'capture_shipping'         => false, //whether or not to capture shipping address information
-		'capture_organization'     => false, //whether or not to capture the organization/company of the contact
-		'capture_registrants'      => false, //whether or not to capture individual registrant information
-		'max_registrants'          => 0,     //max number of total individuals attending event, 0 = unlimited
-		'custom_fields'            => null,  //custom fields to be applied to the registration form 
-		'registrant_custom_fields' => null,  //custom fields to be applied to the registrant information fields
-		'payment_method'           => 0      //which payment method the event should use, 0 = free, 1 = billed later, etc...
+		'post_id'                  => 0,     // the id of the post that is the event
+		'enabled'                  => true,  // whether or not registration is enabled on this event
+		'open'                     => true,  // whether or not registration is open on this event
+		'start_date'               => null,  // the start date for registration, null = immediately available
+		'end_date'                 => null,  // the end date for registration, null = registration does not end
+		'capture_salutation'       => false, // whether or not to capture the contact's salutation (Mr, Mrs, Ms)
+		'capture_shipping'         => false, // whether or not to capture shipping address information
+		'capture_organization'     => false, // whether or not to capture the organization/company of the contact
+		'capture_registrants'      => false, // whether or not to capture individual registrant information
+		'max_registrants'          => 0,     // max number of total individuals attending event, 0 = unlimited
+		'custom_fields'            => null,  // custom fields to be applied to the registration form 
+		'registrant_custom_fields' => null,  // custom fields to be applied to the registrant information fields
+		'payment_method'           => 0      // which payment method the event should use, 0 = free, 1 = billed later, etc...
 	);
 
 	protected static $default_types = array(
