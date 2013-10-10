@@ -1,0 +1,24 @@
+@import "compass/utilities/general/clearfix";
+
+.tally-fields {
+
+	&.form-table th { width: inherit; font-weight: bold; }
+
+	.tally-field-type-text input,
+	.tally-field-type-select select,
+	.tally-field-type-date input
+	{ 
+		width: 100%; 
+	}
+
+	.tally-field, 
+	&.tally-enabled .tally-field.tally-field-id-registrant_custom_fields { 
+		display: none; 
+	}
+
+	.tally-field-id-enabled, 
+	&.tally-enabled .tally-field, 
+	&.tally-enabled.tally-registrants .tally-field.tally-field-id-registrant_custom_fields {
+	 display: table-row; 
+	}
+}

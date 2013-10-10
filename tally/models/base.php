@@ -47,10 +47,12 @@ abstract class Tally_Base {
 					$new = (bool)$arg;
 					break;
 				case 'array':
-					$new = empty($arg) ? array() : unserialize($arg);
+					$new = empty($arg) ? array() : $arg;
+					$new = is_string($new) ? unserialize($new) : $new;
 					break;
 				case 'datetime':
-					$new = ($arg instanceof DateTime || null === $arg) ? $arg : new DateTime($arg);
+					$new = ($arg instanceof DateTime || null == $arg) ? $arg : new DateTime($arg);
+					if ($arg === '0000-00-00 00:00:00') $new = null;
 					break;
 				case 'string': // fall through
 				default:
@@ -131,6 +133,7 @@ abstract class Tally_Base {
 				$data,
 				$formats
 			);
+			if ($success) $this->data[static::$key] = $wpdb->insert_id;
 		} else {
 			$where = array(static::$key => $this->data[static::$key]);
 			$success = false !== $wpdb->update(

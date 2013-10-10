@@ -31,6 +31,7 @@
 define('TALLY_LOCAL',  $_SERVER['SERVER_NAME'] == 'localhost');
 define('TALLY_PATH',   plugin_dir_path(__FILE__));
 define('TALLY_MODELS', TALLY_PATH.'models/');
+define('TALLY_VIEWS',  TALLY_PATH.'views/');
 define('TALLY_URL',    TALLY_LOCAL ? plugins_url().'/tally/' : plugin_dir_url(__FILE__));
 
 //DATABASE CONSTANTS
@@ -53,6 +54,11 @@ require_once TALLY_MODELS.'registration-type.php';
 require_once TALLY_MODELS.'registration.php';
 require_once TALLY_MODELS.'registrant.php';
 
+// Metabox
+require_once TALLY_VIEWS.'meta-box/field-factory.php';
+require_once TALLY_VIEWS.'meta-box/meta-box.php';
+
+
 ////////////////////////////////////////////////////////////////////////////////
 // ROOT PLUGIN CLASS
 ////////////////////////////////////////////////////////////////////////////////
@@ -71,16 +77,6 @@ final class TALLY_Tally {
 	public static function uninstall() {
 		TALLY_Migrations::down();
 		delete_option(TALLY_DB_VERSION_OPTION);
-	}
-
-	private static $post_types = array(
-		'page',
-		'post',
-		'tz-event'
-	);
-
-	public static function post_types() {
-		return apply_filters('tally_post_types', self::$post_types);
 	}
 
 	/**
@@ -109,7 +105,9 @@ final class TALLY_Tally {
 		//results in errors otherwise on the admin side...
 		add_action('init', array(__CLASS__, 'migrate'));
 
-		if (TALLY_LOCAL) add_action('init', array(__CLASS__, 'debug'));
+		//if (TALLY_LOCAL) add_action('init', array(__CLASS__, 'debug'));
+
+		TALLY_Meta_Box::initialize();
 	}
 
 }

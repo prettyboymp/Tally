@@ -8,7 +8,7 @@ class TALLY_Event extends Tally_Base {
 
 	protected static $defaults = array(
 		'post_id'                  => 0,     // the id of the post that is the event
-		'enabled'                  => true,  // whether or not registration is enabled on this event
+		'enabled'                  => false,  // whether or not registration is enabled on this event
 		'open'                     => true,  // whether or not registration is open on this event
 		'start_date'               => null,  // the start date for registration, null = immediately available
 		'end_date'                 => null,  // the end date for registration, null = registration does not end
@@ -57,7 +57,9 @@ class TALLY_Event extends Tally_Base {
 	public static function with_post_id($post_id) 
 	{
 		$results = static::search(array('post_id' => $post_id));
-		return count($results) ? $results[0] : false;
+		return count($results) 
+			? $results[0] 
+			: static::create(array('post_id' => $post_id));
 	}
 
 }
