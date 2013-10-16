@@ -116,9 +116,11 @@ class TALLY_Field_Factory {
 // VALUE RETRIEVAL
 //-----------------------------------------------------------------------------
 
-	protected static function apply_field_value($field, $event) {
+	protected static function apply_field_value($field, $event, $prefix = '') {
 
-		$field['value'] = $event->$field['id'];
+		$datum = str_replace($prefix, '', $field['id']);
+		$datum = str_replace('[]', '', $datum);
+		$field['value'] = $event->$datum;
 
 		if ($field['type'] === 'date' && $field['value'] instanceof DateTime)
 			$field['value'] = $field['value']->format('m/d/Y');
@@ -127,12 +129,12 @@ class TALLY_Field_Factory {
 		return $field;
 	}
 
-	protected static function apply_field_values($fields, $event) {
+	protected static function apply_field_values($fields, $event, $prefix = '') {
 		$new_fields = array();
 		if (!is_array($fields)) return $new_fields;
 
 		foreach($fields as $field) 
-			$new_fields[] = static::apply_field_value($field, $event);
+			$new_fields[] = static::apply_field_value($field, $event, $prefix);
 
 		return $new_fields;
 	}
@@ -162,9 +164,9 @@ class TALLY_Field_Factory {
 // DISPLAY
 //-----------------------------------------------------------------------------
 
-	public static function display_fields($fields, $event) {
+	public static function display_fields($fields, $event, $prefix = '') {
 		$fields = static::normalize_fields($fields);
-		$fields = static::apply_field_values($fields, $event);
+		$fields = static::apply_field_values($fields, $event, $prefix);
 		static::print_fields($fields);
 	}
 

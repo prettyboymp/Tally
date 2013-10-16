@@ -12,13 +12,20 @@
 	}
 
 	.tally-field, 
+	.tally-registration-types,
 	&.tally-enabled .tally-field.tally-field-id-registrant_custom_fields { 
 		display: none; 
 	}
 
 	.tally-field-id-enabled, 
-	&.tally-enabled .tally-field, 
+	&.tally-enabled .tally-field,
+	.tally-enabled.tally-registration-types,
 	&.tally-enabled.tally-registrants .tally-field.tally-field-id-registrant_custom_fields {
 	 display: table-row; 
 	}
+}
+
+.tally-registration-types {
+	display: none;
+	&.tally-enabled { display: block; }
 }

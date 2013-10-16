@@ -62,4 +62,16 @@ class TALLY_Event extends Tally_Base {
 			: static::create(array('post_id' => $post_id));
 	}
 
+	public function total_spots()
+	{
+		return $this->max_registrants <= 0 ? PHP_INT_MAX : $this->max_registrants;
+	}
+
+	public function taken_spots()
+	{
+		$types = TALLY_Registration_Type::with_post_id($this->post_id);
+		$output = 0;
+		foreach($types as $type) $output += $type->taken_spots();
+	}
+
 }

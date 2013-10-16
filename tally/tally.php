@@ -58,6 +58,9 @@ require_once TALLY_MODELS.'registrant.php';
 require_once TALLY_VIEWS.'meta-box/field-factory.php';
 require_once TALLY_VIEWS.'meta-box/meta-box.php';
 
+// Form
+require_once TALLY_VIEWS.'form/form.php';
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // ROOT PLUGIN CLASS
@@ -108,6 +111,7 @@ final class TALLY_Tally {
 		//if (TALLY_LOCAL) add_action('init', array(__CLASS__, 'debug'));
 
 		TALLY_Meta_Box::initialize();
+		TALLY_Form::initialize();
 	}
 
 }

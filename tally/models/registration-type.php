@@ -56,7 +56,41 @@ class TALLY_Registration_Type extends Tally_Base {
 
 	public static function with_post_id($post_id) 
 	{
-		return static::search(array('post_id' => $post_id));
+		$results = static::search(array('post_id' => $post_id, 'active' => true));
+
+		if (empty($results)) {
+			$results[] = static::create(array(
+				'post_id' => $post_id,
+				'name' => 'Individual'
+			));
+		}
+
+		return $results;
+	}
+
+	public static function with_id($id, $post_id = 0) 
+	{
+		$results = static::search(array('id' => $id));
+		return count($results) 
+			? $results[0] 
+			: TALLY_Registration_Type::create(array('post_id' => $post_id)) ;
+	}
+
+	public function taken_spots()
+	{
+		$regs = count(TALLY_Registration::search(array('registration_type_id' => $this->id)));
+		return $this->registrant_count * $regs;
+	}
+
+	public function is_available($remaining_spots)
+	{
+		$existing_regs = count(TALLY_Registration::search(array('registration_type_id' => $this->id)));
+		$max_regs = $this->max_allowed <= 0 ? PHP_INT_MAX : $this->max_allowed;
+
+		return $this->active 
+			&& $this->open 
+			&& $remaining_spots >= $this->registrant_count
+			&& $existing_regs < $max_regs;
 	}
 
 }

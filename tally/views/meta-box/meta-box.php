@@ -14,7 +14,7 @@ class TALLY_Meta_Box {
 		'tz-event'
 	);
 
-	private static function post_types() {
+	public static function post_types() {
 		return apply_filters('tally_post_types', self::$post_types);
 	}
 
@@ -148,25 +148,25 @@ class TALLY_Meta_Box {
 		array(
 			'type'  => 'hidden',
 			'id'    => 'type-id[]',
-			'value' => '%d'
+			'value' => ''
 		),
 		array(
 			'type'  => 'text',
 			'id'    => 'type-name[]',
-			'value' => '%s',
+			'value' => '',
 			'label' => 'Name'
 		),
 		array(
 			'type'  => 'text',
 			'id'    => 'type-description[]',
-			'value' => '%s',
+			'value' => '',
 			'label' => 'Description',
 			'desc'  => 'Describe the benefits of this particular type'
 		),
 		array(
 			'type'  => 'number',
 			'id'    => 'type-registrant_count[]',
-			'value' => '%d',
+			'value' => 1,
 			'label' => 'Registrant Count',
 			'desc'  => 'The number of registrants per one of this type',
 			'min'   => 1,
@@ -175,47 +175,33 @@ class TALLY_Meta_Box {
 		array(
 			'type'  => 'number',
 			'id'    => 'type-price[]',
-			'value' => '%f',
 			'label' => 'Price',
 			'min'   => 0,
-			'step'  => 0.01
+			'step'  => 0.01,
+			'value' => 0
 		),
 		array(
 			'type'  => 'number',
 			'id'    => 'type-max_quantity[]',
-			'value' => '%d',
 			'label' => 'Max Quantity Per Registration',
 			'desc'  => 'Limit how many of one type can be purchased per registration. Set to 0 for unlimited.',
 			'min'   => 0,
-			'step'  => 1
+			'step'  => 1,
+			'value' => 0
 		),
 		array(
 			'type'  => 'number',
 			'id'    => 'type-max_allowed[]',
-			'value' => '%d',
 			'label' => 'Max Quantity Per Event',
 			'desc'  => 'Limit how many of one type can be purchased for an event. Set to 0 for unlimited.',
 			'min'   => 0,
-			'step'  => 1
-		),
-		array(
-			'type'  => 'date',
-			'id'    => 'type-start_date[]',
-			'value' => '%s',
-			'label' => 'Start Date',
-			'desc'  => 'Leave blank to start immediately.'
-		),
-		array(
-			'type'  => 'date',
-			'id'    => 'type-end_date[]',
-			'value' => '%s',
-			'label' => 'End Date',
-			'desc'  => 'Leave blank for continuous registration. This value overrides "Registration Open" if specified.'
+			'step'  => 1,
+			'value' => 0
 		),
 		array(
 			'type'  => 'checkbox',
 			'id'    => 'type-open[]',
-			'value' => '%d',
+			'value' => true,
 			'label' => 'Registration Open',
 			'desc'  => 'This type is currently available for registrations'
 		)
@@ -226,19 +212,42 @@ class TALLY_Meta_Box {
 		if (!isset($_POST[static::$nonce]) || !wp_verify_nonce($_POST[static::$nonce], static::$nonce)) return $post_id;
 		if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return $post_id;
 
-		// save event values
-
 		$event = TALLY_Event::with_post_id($post_id);
-
 		foreach(static::$fields as $field) {
 			$id = 'tally-'.$field['id'];
 			$value = isset($_POST[$id]) ? $_POST[$id] : false;
 			$event->$field['id'] = $value;
 		}
-
 		$event->save();
 
-		// save reg types
+
+
+		if (isset($_POST['tally-type-id']) && is_array($_POST['tally-type-id'])) {
+
+			$ids = array_map(function($i) { return (int)$i; }, $_POST['tally-type-id']);
+
+			$prev_types = TALLY_Registration_Type::with_post_id($post_id);
+			$new_types = array();
+
+			foreach($prev_types as $type) if ($type->id !== 0 && !in_array($type->id, $ids)) {
+				$type->active = false;
+				$type->open = false;
+				$type->save();
+			}
+
+			foreach ($ids as $id) {
+				$new_types[] = TALLY_Registration_Type::with_id($id, $post_id);
+			}
+
+			foreach($new_types as $i => $type) {
+				foreach($_POST as $name => $values) {
+					if (strpos($name, 'tally-type-') === false) continue;
+					$field = str_replace('tally-type-', '', $name);
+					$type->$field = $values[$i];
+				}
+				$type->save();
+			}
+		}
 	}
 
 	public static function display($post, $args = null) {
@@ -252,13 +261,28 @@ class TALLY_Meta_Box {
 	protected static function display_reg_types($post_id)
 	{
 		$types = TALLY_Registration_Type::with_post_id($post_id);
+		echo '<div class="tally-registration-types">';
 		echo '<h2>Registration Types</h2>';
-		static::reg_type_template();
+		foreach($types as $type) TALLY_Field_Factory::display_fields(static::$reg_fields, $type, 'type-');
+		static::reg_type_controls();
+		static::reg_type_template($post_id);
+		echo '</div>';
 	}
 
-	protected static function reg_type_template() {
+	protected static function reg_type_controls() { ?>
+		<div class="tally-registration-types-controls">
+			<input type="button" class="tally-registration-type-add button" value="Add Type" />
+			<input type="button" class="tally-registration-type-remove button" value="Remove Type" />
+		</div>
+	<? }
+
+	protected static function reg_type_template($post_id) {
 		$fields = TALLY_Field_Factory::normalize_fields(static::$reg_fields);
+		$fields[0]['value'] = $post_id;
+
+		echo '<script id="tally-template" type="template/tally">';
 		TALLY_Field_Factory::print_fields($fields);
+		echo '</script>';
 	}
 
 }
