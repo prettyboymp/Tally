@@ -1,4 +1,4 @@
-<?
+<?php
 
 class TALLY_Form {
 
@@ -23,7 +23,7 @@ class TALLY_Form {
 		foreach($types as $type) $types_available |= $type->is_available($remaining_spots);
 
 		$output = '<div class="tally-form">';
-
+		
 		$now = new DateTime();
 		if ( !$event->open 
 			|| (!is_null($event->start_date) && $now < $event->start_date) 

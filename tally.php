@@ -32,7 +32,7 @@ define('TALLY_LOCAL',  $_SERVER['SERVER_NAME'] == 'localhost');
 define('TALLY_PATH',   plugin_dir_path(__FILE__));
 define('TALLY_MODELS', TALLY_PATH.'models/');
 define('TALLY_VIEWS',  TALLY_PATH.'views/');
-define('TALLY_URL',    TALLY_LOCAL ? plugins_url().'/tally/' : plugin_dir_url(__FILE__));
+define('TALLY_URL',    plugins_url(__FILE__) );
 
 //DATABASE CONSTANTS
 define('TALLY_DB_VERSION',               4);
@@ -107,8 +107,6 @@ final class TALLY_Tally {
 		//have to wait until init before attempting to manipulate the db
 		//results in errors otherwise on the admin side...
 		add_action('init', array(__CLASS__, 'migrate'));
-
-		//if (TALLY_LOCAL) add_action('init', array(__CLASS__, 'debug'));
 
 		TALLY_Meta_Box::initialize();
 		TALLY_Form::initialize();
